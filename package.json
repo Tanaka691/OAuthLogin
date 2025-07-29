@@ -6,7 +6,9 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "setup": "node setup.js",
+    "setup:example": "copy .env.example .env.local && echo ✅ .env.local created! Please edit it with your OAuth credentials."
   },
   "dependencies": {
     "next": "15.4.4",
