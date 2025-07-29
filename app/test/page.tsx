@@ -1,9 +1,17 @@
+'use client';
+
 import React from 'react';
 
-type CounterState = { count: number };
+// propsがない場合は {} を指定
+type Props = {};
 
-class Counter extends React.Component<{}, CounterState> {
-  constructor(props: {}) {
+// stateに count:number を定義
+type State = {
+  count: number;
+};
+
+class Counter extends React.Component<Props, State> {
+  constructor(props: Props) {
     super(props);
     this.state = { count: 0 };
   }
