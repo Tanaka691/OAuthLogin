@@ -39,24 +39,10 @@ export default function SignIn() {
     
     setIsLoading(true);
     try {
-      // credentials プロバイダーの場合は直接フォーム送信
+      // credentials プロバイダーの場合は直接認証ページにリダイレクト
       if (providerId === 'credentials') {
-        const formData = new FormData();
-        formData.append('username', 'test');
-        formData.append('password', 'test');
-        formData.append('csrfToken', csrfToken);
-        formData.append('callbackUrl', '/');
-        
-        const response = await fetch('/api/auth/callback/credentials', {
-          method: 'POST',
-          body: formData,
-        });
-        
-        if (response.ok) {
-          router.push('/');
-        } else {
-          console.error('Credentials login failed');
-        }
+        router.push('/auth/direct-signin');
+        return;
       } else {
         // OAuth providers
         const result = await signIn(providerId, { 
@@ -91,7 +77,7 @@ export default function SignIn() {
           <div className="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-md">
             <h3 className="text-sm font-medium text-yellow-800 mb-2">テスト用ログイン</h3>
             <p className="text-xs text-yellow-700 mb-3">
-              実際のOAuth設定前にテストできます（username: test, password: test）
+              OAuth設定前にテストできます。「テストログイン」ボタンで直接認証ページに移動します。
             </p>
             <div className="space-y-2">
               <button
@@ -99,7 +85,7 @@ export default function SignIn() {
                 disabled={isLoading}
                 className="w-full py-2 px-4 border border-yellow-300 rounded-md shadow-sm text-sm font-medium text-yellow-800 bg-yellow-100 hover:bg-yellow-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isLoading ? 'ログイン中...' : 'テストログイン'}
+                {isLoading ? '移動中...' : 'テストログインページへ'}
               </button>
               <a
                 href="/auth/direct-signin"

@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { signIn } from 'next-auth/react';
 
 export default function DirectSignIn() {
   const [error, setError] = useState('');
@@ -14,28 +15,28 @@ export default function DirectSignIn() {
     setError('');
 
     const formData = new FormData(e.currentTarget);
+    const username = formData.get('username') as string;
+    const password = formData.get('password') as string;
     
     try {
-      const response = await fetch('/api/auth/callback/credentials', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams({
-          username: formData.get('username') as string,
-          password: formData.get('password') as string,
-          callbackUrl: '/',
-        }),
+      // NextAuth.js の signIn 関数を使用
+      const result = await signIn('credentials', {
+        username,
+        password,
+        redirect: false,
       });
 
-      if (response.ok || response.status === 302) {
-        // 成功またはリダイレクト
-        window.location.href = '/';
+      if (result?.error) {
+        setError('ログインに失敗しました: ' + result.error);
+      } else if (result?.ok) {
+        // 成功時はホームページにリダイレクト
+        router.push('/');
       } else {
-        setError('ログインに失敗しました');
+        setError('予期しないエラーが発生しました');
       }
     } catch (error) {
       setError('ネットワークエラーが発生しました');
+      console.error('Sign in error:', error);
     } finally {
       setIsLoading(false);
     }
@@ -46,18 +47,25 @@ export default function DirectSignIn() {
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            直接認証フォーム
+            テスト認証ページ
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
-            CSRFトークンを使わない直接的な認証
+            OAuth設定前でもテストできる簡易認証システム
           </p>
         </div>
         
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="bg-blue-50 border border-blue-200 rounded-md p-6">
-            <h3 className="text-lg font-medium text-blue-900 mb-4">
-              テスト認証フォーム
+            <h3 className="text-lg font-medium text-blue-900 mb-2">
+              デモ用ログイン
             </h3>
+            <p className="text-sm text-blue-700 mb-4">
+              以下のテスト用認証情報を使用してログインできます：
+            </p>
+            <div className="text-sm text-blue-600 mb-4 bg-blue-100 p-2 rounded">
+              <strong>ユーザー名:</strong> test<br/>
+              <strong>パスワード:</strong> test
+            </div>
             
             {error && (
               <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded text-red-700 text-sm">
