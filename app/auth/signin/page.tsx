@@ -102,18 +102,6 @@ export default function SignIn() {
                 {isLoading ? 'ログイン中...' : 'テストログイン'}
               </button>
               <a
-                href="/auth/test-signin"
-                className="block w-full py-2 px-4 border border-yellow-300 rounded-md shadow-sm text-sm font-medium text-yellow-800 bg-white hover:bg-yellow-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 text-center"
-              >
-                クライアントサイドテスト
-              </a>
-              <a
-                href="/auth/server-signin"
-                className="block w-full py-2 px-4 border border-green-300 rounded-md shadow-sm text-sm font-medium text-green-800 bg-green-50 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 text-center"
-              >
-                サーバーサイドテスト
-              </a>
-              <a
                 href="/auth/direct-signin"
                 className="block w-full py-2 px-4 border border-blue-300 rounded-md shadow-sm text-sm font-medium text-blue-800 bg-blue-50 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 text-center"
               >
