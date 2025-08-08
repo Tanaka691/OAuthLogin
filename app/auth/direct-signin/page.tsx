@@ -1,13 +1,26 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { signIn } from 'next-auth/react';
+import { useState, useEffect } from 'react';
+import { signIn, getCsrfToken } from 'next-auth/react';
 
 export default function DirectSignIn() {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [csrfToken, setCsrfToken] = useState('');
   const router = useRouter();
+
+  useEffect(() => {
+    const fetchCsrfToken = async () => {
+      try {
+        const token = await getCsrfToken();
+        setCsrfToken(token || '');
+      } catch (error) {
+        console.error('Failed to fetch CSRF token:', error);
+      }
+    };
+    fetchCsrfToken();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -19,11 +32,16 @@ export default function DirectSignIn() {
     const password = formData.get('password') as string;
     
     try {
+      // CSRFトークンを再取得して最新の状態にする
+      const latestCsrfToken = await getCsrfToken();
+      
       // NextAuth.js の signIn 関数を使用
       const result = await signIn('credentials', {
         username,
         password,
         redirect: false,
+        callbackUrl: '/',
+        csrfToken: latestCsrfToken,
       });
 
       if (result?.error) {
@@ -31,6 +49,7 @@ export default function DirectSignIn() {
       } else if (result?.ok) {
         // 成功時はホームページにリダイレクト
         router.push('/');
+        router.refresh();
       } else {
         setError('予期しないエラーが発生しました');
       }
@@ -55,6 +74,9 @@ export default function DirectSignIn() {
         </div>
         
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          {csrfToken && (
+            <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
+          )}
           <div className="bg-blue-50 border border-blue-200 rounded-md p-6">
             <h3 className="text-lg font-medium text-blue-900 mb-2">
               デモ用ログイン

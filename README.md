@@ -1,4 +1,95 @@
-# OAuth認証アプリ
+# OAuth + Gradio 統合アプリケーション
+
+NextAuth.jsを使用したOAuth認証とGradioアプリケーションを統合したWebアプリケーションです。
+
+## 機能
+
+- **OAuth認証**: GitHub、Googleなどのプロバイダーでの認証
+- **Gradio統合**: 認証後にGradioアプリケーションにアクセス可能
+- **セッション管理**: NextAuth.jsによる安全なセッション管理
+
+## セットアップ
+
+### 1. 依存関係のインストール
+
+```bash
+npm install
+```
+
+### 2. Python環境の準備
+
+```bash
+pip install gradio
+```
+
+### 3. 環境変数の設定
+
+`.env.local`ファイルを作成し、以下を設定：
+
+```env
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=your-secret-key-here
+GITHUB_ID=your-github-oauth-app-id
+GITHUB_SECRET=your-github-oauth-app-secret
+```
+
+### 4. OAuth アプリケーションの設定
+
+#### GitHub OAuth App
+1. GitHub → Settings → Developer settings → OAuth Apps
+2. New OAuth App を作成
+3. Authorization callback URL: `http://localhost:3000/api/auth/callback/github`
+
+## 使用方法
+
+### 開発サーバーの起動
+
+```bash
+npm run dev
+```
+
+### アプリケーションの流れ
+
+1. `http://localhost:3000` にアクセス
+2. サインインページでOAuth認証を実行
+3. 認証成功後、Gradioアプリケーションの起動が可能
+4. Gradioインターフェースでカウンターアプリを使用
+
+## ファイル構成
+
+```
+├── app/
+│   ├── api/
+│   │   ├── auth/[...nextauth]/route.ts  # NextAuth設定
+│   │   └── gradio/route.ts              # Gradio API
+│   ├── auth/                            # 認証関連ページ
+│   ├── page.tsx                         # メインページ
+│   └── layout.tsx                       # レイアウト
+├── components/
+│   └── AuthProvider.tsx                 # 認証プロバイダー
+├── lib/
+│   └── auth.ts                          # 認証設定
+├── gradio_app.py                        # Gradioアプリケーション
+└── README.md
+```
+
+## トラブルシューティング
+
+### CSRF Token エラー
+- ブラウザのキャッシュをクリア
+- `NEXTAUTH_URL`が正しく設定されているか確認
+
+### Gradio起動エラー
+- Pythonがインストールされているか確認
+- gradioパッケージがインストールされているか確認
+- ポート7860が他のプロセスで使用されていないか確認
+
+## 技術スタック
+
+- **Frontend**: Next.js 15, React, TypeScript
+- **Authentication**: NextAuth.js
+- **Backend**: Python, Gradio
+- **Styling**: Tailwind CSS
 
 Next.js 15とNextAuth.js v5を使用したOAuth認証システムです。
 

@@ -44,6 +44,7 @@ export const {
   },
   secret: process.env.NEXTAUTH_SECRET,
   trustHost: true,
+  useSecureCookies: false, // 開発環境では無効化
   experimental: {
     enableWebAuthn: false,
   },
