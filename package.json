@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "next lint",
     "setup": "node setup.js",
-    "setup:example": "copy .env.example .env.local && echo ✅ .env.local created! Please edit it with your OAuth credentials."
+    "setup:example": "copy .env.example .env.local && echo ✅ .env.local created! Please edit it with your OAuth credentials.",
+    "check:python": "python --version && python -c \"import gradio; print('✅ Gradio', gradio.__version__, 'is installed')\"",
+    "check:env": "node -e \"require('fs').existsSync('.env.local') ? console.log('✅ .env.local exists') : console.log('❌ .env.local not found')\""
   },
   "dependencies": {
     "next": "15.4.4",

@@ -7,22 +7,49 @@ NextAuth.jsを使用したOAuth認証とGradioアプリケーションを統合�
 - **OAuth認証**: GitHub、Googleなどのプロバイダーでの認証
 - **Gradio統合**: 認証後にGradioアプリケーションにアクセス可能
 - **セッション管理**: NextAuth.jsによる安全なセッション管理
+- **デスクトップショートカット**: 開発サーバーの簡単起動
+
+## 前提条件
+
+- **Node.js** 18.0以上
+- **Python** 3.7以上
+- **npm** または **yarn**
 
 ## セットアップ
 
-### 1. 依存関係のインストール
+### 自動セットアップ（推奨）
+
+```bash
+# Node.jsとPython依存関係を自動インストール
+npm run setup
+```
+
+または
+
+```bash
+# Windows環境での実行
+setup.bat
+```
+
+### 手動セットアップ
+
+#### 1. Node.js依存関係のインストール
 
 ```bash
 npm install
 ```
 
-### 2. Python環境の準備
+#### 2. Python環境の準備
 
 ```bash
-pip install gradio
+# Gradioのインストール
+pip install gradio==5.35.0
+
+# または requirements.txtを使用
+pip install -r requirements.txt
 ```
 
-### 3. 環境変数の設定
+#### 3. 環境変数の設定
 
 `.env.local`ファイルを作成し、以下を設定：
 
@@ -184,7 +211,42 @@ GITHUB_CLIENT_SECRET=your-github-client-secret
 
 ## 🚨 トラブルシューティング
 
-### "There was a problem with the server configuration" エラー
+### セットアップエラー
+
+#### "Python が見つかりません" エラー
+```bash
+# Pythonをインストールしてください
+https://www.python.org/downloads/
+
+# Pythonのバージョンを確認
+python --version
+# または
+python3 --version
+```
+
+#### "pip install でエラーが発生しました" エラー
+```bash
+# 手動でGradioをインストール
+pip install gradio==5.35.0
+
+# または、pipをアップグレードしてから再試行
+python -m pip install --upgrade pip
+pip install gradio==5.35.0
+```
+
+#### Node.js依存関係のインストールエラー
+```bash
+# npmキャッシュをクリア
+npm cache clean --force
+
+# 依存関係を再インストール
+rm -rf node_modules package-lock.json
+npm install
+```
+
+### 実行時エラー
+
+#### "There was a problem with the server configuration" エラー
 
 このエラーが発生する場合：
 
@@ -196,12 +258,49 @@ GITHUB_CLIENT_SECRET=your-github-client-secret
    npm run dev
    ```
 
-### CSRF エラー
+#### Gradioが起動しない
+
+1. **Python環境を確認**:
+   ```bash
+   python --version
+   pip list | grep gradio
+   ```
+
+2. **手動でGradioアプリを実行**:
+   ```bash
+   python gradio_app.py
+   ```
+
+3. **ポート7860が使用中**:
+   - 他のGradioプロセスを終了
+   - Windowsの場合: タスクマネージャーでpython.exeプロセスを確認
+
+#### CSRF エラー
 
 NextAuth.js v5 ベータ版では、CSRFエラーが発生することがあります。その場合は：
 
 1. **テストログイン**を使用: http://localhost:3000/auth/direct-signin
 2. Username: `test`, Password: `test`
+
+### 開発環境のトラブル
+
+#### デスクトップショートカットが動かない
+```bash
+# 手動でショートカットを作成
+npm run setup
+
+# または、直接バッチファイルを実行
+.\start-dev-server.bat
+```
+
+#### ブラウザが自動で開かない
+```bash
+# 手動でブラウザを開く
+start http://localhost:3000
+
+# または、別のショートカットを使用
+.\start-with-browser.bat
+```
 
 ## 🛠️ 技術スタック
 
